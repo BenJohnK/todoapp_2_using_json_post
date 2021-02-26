@@ -1,4 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
 <h3>TO DO</h3>
+<form id="form">
+<input type="text" name="title" style="width: 75%;">
+<input type="submit">
+</form>
 {% for task in tasks %}
     <h4>{{task}}<h4>
 {% endfor %}
+<script type="text/javascript">
+    var form = document.getElementById("form")
+    form.addEventListener('submit',function(e){
+        e.preventDefault()
+        if(form.title.value){
+            var title = form.title.value
+            var url='/titlesubmit/'
+            fetch(url,{
+                'method':'POST',
+                'headers':{
+                    'Content-Type':'application/json',
+                    'X-CSRFToken':csrftoken
+                },
+                'body':JSON.stringify({'title':title}),
+            })
+            .then((response)=>{
+                return response.json()
+            })
+            .then((data)=>{
+                location.reload()
+            })
+        }
+    })
+</script>
+{% endblock %}
